@@ -5,6 +5,10 @@ namespace IaActividad1.Steering.Dynamic
     public class SeekVirtual : Seek
     {
         public Vector3 objetiveTarget;
+        private void Start()
+        {
+            objetiveTarget = transform.position;
+        }
 
         public override SteeringOutput GetSteering()
         {

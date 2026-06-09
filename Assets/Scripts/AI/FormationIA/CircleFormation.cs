@@ -17,10 +17,15 @@ public class CircleFormation : IFormationPattern
         return slotCount <= maxSlots;
     }
 
-    public Vector3 GetSlotTransform(int index)
+    public Vector3 GetSlotTransform(int index, int totalSlots)
     {
-        float anguloGrados = index * (360f / maxSlots);
+        // Protección de seguridad por si no hay agentes
+        if (totalSlots == 0) return Vector3.zero;
+
+        // Dividimos 360 grados entre el número ACTUAL de agentes, no entre el máximo
+        float anguloGrados = index * (360f / totalSlots);
         float anguloRadianes = anguloGrados * Mathf.Deg2Rad;
+
         float x = Mathf.Cos(anguloRadianes) * radio;
         float z = Mathf.Sin(anguloRadianes) * radio;
 
@@ -39,7 +44,8 @@ public class CircleFormation : IFormationPattern
         Vector3 centroMasas = Vector3.zero;
         foreach (var slot in slots)
         {
-            centroMasas += GetSlotTransform(slot.index);
+            // Pasamos slots.Count como segundo parámetro
+            centroMasas += GetSlotTransform(slot.index, slots.Count);
         }
 
         return centroMasas / slots.Count;

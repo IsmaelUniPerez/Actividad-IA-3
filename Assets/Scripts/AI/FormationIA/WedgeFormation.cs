@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 public class WedgeFormation : IFormationPattern
 {
-    private float separationX;
-    private float separationZ;
+    private float separacionX;
+    private float separacionZ;
     private int maxSlots;
 
     public WedgeFormation(float separacionX = 2.0f, float separacionZ = 2.0f, int maxSlots = 10)
     {
-        this.separationX = separacionX;
-        this.separationZ = separacionZ;
+        this.separacionX = separacionX;
+        this.separacionZ = separacionZ;
         this.maxSlots = maxSlots;
     }
 
@@ -19,13 +19,15 @@ public class WedgeFormation : IFormationPattern
         return slotCount <= maxSlots;
     }
 
-    public Vector3 GetSlotTransform(int index)
+    public Vector3 GetSlotTransform(int index, int totalSlots)
     {
         if (index == 0) return Vector3.zero;
+
         int fila = (index + 1) / 2;
         float lado = (index % 2 == 0) ? 1.0f : -1.0f;
-        float x = lado * fila * separationX;
-        float z = -fila * separationZ;
+
+        float x = lado * fila * separacionX;
+        float z = -fila * separacionZ;
 
         return new Vector3(x, 0, z);
     }
@@ -42,9 +44,8 @@ public class WedgeFormation : IFormationPattern
         Vector3 centroMasas = Vector3.zero;
         foreach (var slot in slots)
         {
-            centroMasas += GetSlotTransform(slot.index);
+            centroMasas += GetSlotTransform(slot.index, slots.Count);
         }
-
         return centroMasas / slots.Count;
     }
 }

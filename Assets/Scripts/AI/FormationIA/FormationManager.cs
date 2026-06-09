@@ -8,6 +8,8 @@ public class FormationManager : MonoBehaviour
     private IFormationPattern pattern;//el patrón que se asigna, es una interfaz que nos permite a través de un constructor crear y asignar distintos patrones
     private Vector3 formationAdjustement;//el vector que usamos para centrar la formación
 
+    public Vector3 globalAnchor = Vector3.zero;
+
     //Tanto añadir comno eliminar agentes son booleanos, ésto lo hacemos para que podamos por saber por ejemplo en la blackboard si se ha añadido o eliminado un agente correctament
     //o si no se ha podido, podría funcionar con voids a secas pero lo dejaré así para tener más info sobre lo que ocurre en la formación, y así que los expertos de la blackboard
     //puedan saber el resultado de éstos métodos
@@ -70,26 +72,21 @@ public class FormationManager : MonoBehaviour
         }
     }
 
-    void Update()//vamos a usar el update para actualizar la posición de cada agente en el patrón, y así mantener la formación si ésta cambia en posición, orientación o numero de agentes
+    void Update()
     {
-        //Si no tenemos un patrón asignado, no hacemos nada
         if (pattern == null) return;
 
-        //por cada slot en la lista de slots
         foreach (var slot in slots)
         {
             if (slot.agent != null)
             {
-                //se obtiene la transformationInPatron con pattern.GetSlotTransform(índice de slot)
-                Vector3 transformationInPatron = pattern.GetSlotTransform(slot.index);
-
-                //la localización es la suma de la transformationInPatron y el pattern.GetAnchorPoint()
+                Vector3 transformationInPatron = pattern.GetSlotTransform(slot.index, slots.Count);
                 Vector3 localitation = transformationInPatron + pattern.GetAnchorPoint();
-
-                //se resta a la localización el formationAdjustement
                 localitation -= formationAdjustement;
 
-                //por último, se establece la localización como el objetivo del agente que se encuentra en slot
+                // NUEVO: Sumamos el ancla global a la posición final
+                localitation += globalAnchor;
+
                 SeekVirtual steeringSeek = slot.agent.GetComponent<SeekVirtual>();
                 if (steeringSeek != null)
                 {

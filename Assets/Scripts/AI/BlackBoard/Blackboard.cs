@@ -42,11 +42,12 @@ public class Blackboard : MonoBehaviour
     public Action[] EvaluateExperts()
     {
         Expert bestExpert = null;
-        float maxInsistence = float.MinValue;
+        float maxInsistence = 0f;
+
         foreach (Expert expert in experts)
         {
             float currentInsistence = expert.GetInsistence(this);
-            if (bestExpert == null || currentInsistence > maxInsistence)
+            if (currentInsistence > maxInsistence)
             {
                 maxInsistence = currentInsistence;
                 bestExpert = expert;
@@ -56,6 +57,7 @@ public class Blackboard : MonoBehaviour
         {
             return bestExpert.Run(this);
         }
+
         return null;
     }
     public void RegisterExpert(Expert expert)
