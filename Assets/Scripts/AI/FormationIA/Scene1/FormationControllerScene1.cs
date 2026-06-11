@@ -4,17 +4,17 @@ using UnityEngine.InputSystem;
 
 public class FormationControllerScene1 : MonoBehaviour
 {
-    [Header("Arquitectura")]
+    [Header("Arquitectura")] //Gestor de formación
     public FormationManager formationManager;
 
-    [Header("Agentes Activos")]
+    [Header("Agentes Activos")] //Lista de agentes que empiezan dentro de la formación
     public List<GameObject> team;
 
-    [Header("Agentes en Reserva (Cola)")]
+    [Header("Agentes en Reserva (Cola)")] //Lista de agentes que empiezan fuera de la formación, esperando a ser añadidos
     public List<GameObject> reserveAgents;
 
-    [Header("Ajustes Geométricos")]
-    public float espacioEntreAgentes = 3f;
+    [Header("Ajustes Geométricos")] //Parámetros para configurar el patrón de formación
+    public float espacioEntreAgentes = 8f;
     public int limiteAgentes = 10;
 
     void Start()
@@ -23,7 +23,7 @@ public class FormationControllerScene1 : MonoBehaviour
 
         formationManager.SetPattern(new LineFormation(espacioEntreAgentes, limiteAgentes));
 
-        // Añadimos solo a los del equipo inicial
+        //Añadimos solo a los del equipo inicial
         foreach (GameObject agent in team)
         {
             formationManager.AddAgent(agent);
@@ -34,25 +34,25 @@ public class FormationControllerScene1 : MonoBehaviour
     {
         if (Keyboard.current == null) return;
 
-        // Tecla Espacio: Meter al siguiente agente de la cola en la formación
+        //Usando el espacio podemos meter al siguiente agente de la cola en la formación
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             if (reserveAgents.Count > 0)
             {
-                // Cogemos al primer agente de la cola (índice 0)
+                //Cogemos al primer agente de la cola
                 GameObject recluta = reserveAgents[0];
 
-                // Intentamos meterlo en el gestor. Si hay hueco en el patrón, AddAgent devolverá TRUE.
+                //Intentamos meterlo en el gestor. Si hay hueco en el patrón, AddAgent devolverá TRUE.
                 if (formationManager.AddAgent(recluta))
                 {
                     Debug.Log($"Agente {recluta.name} añadido a la formación exitosamente.");
 
-                    // Como ya está dentro, lo borramos de la cola de espera
+                    //Como está en la formación lo quitamos de reserva
                     reserveAgents.RemoveAt(0);
                 }
                 else
                 {
-                    // Si AddAgent devuelve FALSE (ej. el límite es 10 y ya hay 10)
+                    //Si AddAgent devuelve FALSE (ej. el límite es 10 y ya hay 10)
                     Debug.LogWarning("Orden rechazada: La formación actual ha alcanzado su límite máximo.");
                 }
             }
@@ -61,6 +61,7 @@ public class FormationControllerScene1 : MonoBehaviour
                 Debug.Log("La cola de reserva está vacía. No hay más agentes para añadir.");
             }
         }
+        //dependiendo de la tecla cambiamos a un patrón de formación u otro
         if (Keyboard.current.digit1Key.wasPressedThisFrame)
         {
             formationManager.SetPattern(new LineFormation(espacioEntreAgentes, limiteAgentes));
@@ -71,7 +72,7 @@ public class FormationControllerScene1 : MonoBehaviour
         }
         else if (Keyboard.current.digit3Key.wasPressedThisFrame)
         {
-            float radioCirculo = espacioEntreAgentes + 1.5f;
+            float radioCirculo = espacioEntreAgentes + 1.5f;//le añadimos un extra para que no se amontonen tanto al ser una formación circular
             formationManager.SetPattern(new CircleFormation(radioCirculo, limiteAgentes));
         }
     }

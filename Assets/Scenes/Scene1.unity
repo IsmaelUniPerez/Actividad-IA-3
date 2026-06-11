@@ -177,8 +177,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52895d80c1591864fab10af870b48171, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestFormacion
-  gestor: {fileID: 55201714}
-  agentesEnEscena: []
 --- !u!1 &129296518
 GameObject:
   m_ObjectHideFlags: 0
@@ -1682,7 +1680,7 @@ MonoBehaviour:
   - {fileID: 431829641}
   - {fileID: 591436777}
   - {fileID: 565745248}
-  espacioEntreAgentes: 3
+  espacioEntreAgentes: 5
   limiteAgentes: 10
 --- !u!1 &1020183965
 GameObject:
